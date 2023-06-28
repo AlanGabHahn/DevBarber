@@ -11,9 +11,30 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('all_tables', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('name', 150);
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('avatar')->default('default.png');
+        });
+        Schema::create('users_favorites', function (Blueprint $table) {
+            $table->id();
+            $table->integer('user_id');
+            $table->integer('barber_id');
+        });
+        Schema::create('users_appointments', function (Blueprint $table) {
+            $table->id();
+            $table->integer('user_id');
+            $table->integer('barber_id');
+            $table->datetime('appointment_date');
+        });
+
+        Schema::create('barbers', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 150);
+            $table->string('avatar')->default('default.png');
+            $table->float('stars')->default(0);
         });
     }
 
