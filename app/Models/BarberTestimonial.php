@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BarberTestimonial extends Model
 {
     use HasFactory;
+
+    protected $table = 'barbers_testimonials';
+    public $timestamps = false;
 }
