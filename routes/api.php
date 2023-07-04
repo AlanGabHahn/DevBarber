@@ -28,5 +28,13 @@ Route::prefix('/auth')->group(function() {
 Route::post('/user', [AuthController::class, 'store']);
 
 Route::get('/user', [UserController::class, 'index']);
+Route::put('/user', [UserController::class, 'update']);
+Route::get('/user/favorites', [UserController::class, 'favorites']);
+Route::post('/user/favorite', [UserController::class, 'store']);
+Route::get('/user/appointments', [UserController::class, 'appointments']);
 
 Route::get('/barbers', [BarberController::class, 'index']);
+Route::get('/barber/{id}', [BarberController::class, 'show']);
+Route::post('/barber/{id}/appointment', [BarberController::class, 'appointment']);
+
+Route::get('/search', [BarberController::class, 'search']);
