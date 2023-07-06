@@ -20,6 +20,8 @@ class User extends Authenticatable implements JwtSubject
         'password',
     ];
 
+    public $timestamps = false;
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

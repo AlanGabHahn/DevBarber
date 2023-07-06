@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Laravel\Passport\HasApiTokens;
 
 class AuthController extends Controller
 {
@@ -48,6 +49,18 @@ class AuthController extends Controller
                 $user->email = $email;
                 $user->password = $hash;
                 $user->save();
+                $token = Auth::attempt([
+                    'email' => $email, 
+                    'password' => $password
+                ]);
+                if(!$token) {
+                    $array['error'] = 'Ocorreu um erro.';
+                    return $array;
+                }
+                $info = Auth::user();
+                $info['avatar'] = url('media/avatars/'. $info['avatar']);
+                $array['data'] = $info;
+                $array['token'] = $token;
             } else {
                 $array['error'] = 'Email já cadastrado';
                 return $array;
