@@ -18,11 +18,26 @@ class AuthController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a login of the resource.
      */
-    public function index()
+    public function login(Request $request)
     {
-        //
+        $array =  ['error' => ''];
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $token = Auth::attempt([
+            'email' => $email, 
+            'password' => $password
+        ]);
+        if(!$token) {
+            $array['error'] = 'Usuário e/ou senha incorretos!';
+            return $array;
+        }
+        $info = Auth::user();
+        $info['avatar'] = url('media/avatars/'. $info['avatar']);
+        $array['data'] = $info;
+        $array['token'] = $token;
+        return $array;
     }
 
     /**
