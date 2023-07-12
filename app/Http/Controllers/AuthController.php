@@ -88,19 +88,26 @@ class AuthController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Function to exit the application
      */
-    public function show(string $id)
+    public function logout()
     {
-        
+        Auth::logout();
+        return ['error' => ''];
     }
 
     /**
-     * Update the specified resource in storage.
+     * Refresh the page
      */
-    public function update(Request $request, string $id)
+    public function refresh()
     {
-        //
+        $array = ['error' => ''];
+        $token = Auth::refresh();
+        $info = Auth::user();
+        $info['avatar'] = url('media/avatars/'. $info['avatar']);
+        $array['data'] = $info;
+        $array['token'] = $token;
+        return $array;
     }
 
     /**
