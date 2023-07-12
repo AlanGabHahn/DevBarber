@@ -16,13 +16,11 @@ use App\Http\Controllers\UserController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 Route::get('/ping', function(){
     return ['pong'=>true];
 });
+
+Route::get('/401', [AuthController::class, 'unauthorized'])->name('login');
 
 Route::prefix('/auth')->group(function() {
     Route::post('/login', [AuthController::class, 'login']);

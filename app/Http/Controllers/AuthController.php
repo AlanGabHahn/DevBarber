@@ -14,7 +14,7 @@ class AuthController extends Controller
 
     public function __construct() 
     {
-        $this->middleware('auth:api', ['except' => ['store', 'login']]);
+        $this->middleware('auth:api', ['except' => ['store', 'login', 'unauthorized']]);
     }
 
     /**
@@ -108,6 +108,16 @@ class AuthController extends Controller
         $array['data'] = $info;
         $array['token'] = $token;
         return $array;
+    }
+
+    /**
+     * If the user is not authorized
+     */
+    public function unauthorized()
+    {
+        return response()->json([
+            'error' => 'Não autorizado.'
+        ], 401);
     }
 
     /**
