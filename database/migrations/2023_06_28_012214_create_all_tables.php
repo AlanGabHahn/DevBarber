@@ -38,7 +38,7 @@ return new class extends Migration
             $table->string('avatar')->default('default.png');
             $table->float('stars')->default(0);
             $table->string('latitude')->nullable();
-            $table->string('longitute')->nullable();
+            $table->string('longitude')->nullable();
         });
         Schema::create('barbers_photo', function (Blueprint $table) {
             $table->id();

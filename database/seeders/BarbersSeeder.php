@@ -6,7 +6,9 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Barber;
 use App\Models\BarberPhoto;
-use App\MOdels\BarberService;
+use App\Models\BarberService;
+use App\Models\BarberTestimonial;
+use App\Models\BarberAvailability;
 
 class BarbersSeeder extends Seeder
 {
@@ -15,7 +17,7 @@ class BarbersSeeder extends Seeder
      */
     public function run(): void
     {
-        for($i=0;$i<15;$i++) {
+        for ($i=0;$i<15;$i++) {
             $names = [
                 "Sofia",
                 "Lucas",
@@ -68,19 +70,45 @@ class BarbersSeeder extends Seeder
             $barber->longitude = '-46.6'.rand(0, 9).'82795';
             $barber->save();
 
-            for($i=0;$i<0;$i++) {
+            for ($i=0;$i<0;$i++) {
                 $barberPhoto = new BarberPhoto();
                 $barberPhoto->barber_id = $barber->id;
                 $barberPhoto->image = rand(2, 4).'.png';
                 $barberPhoto->save();
             }
 
-            for($w=0;$w<$ns;$w++) {
+            for ($w=0;$w<$ns;$w++) {
                 $barberService = new BarberService();
                 $barberService->barber_id = $barber->id;
-                $barberService->name = $services[rand(0, count($names)-1)];
+                $barberService->name = $services[rand(0, count($services)-1)];
                 $barberService->price = rand(1, 99).'.'.rand(0, 100);
                 $barberService->save();
+            }
+
+            for ($w=0;$w<3;$w++) {
+                $barberTestimonials = new BarberTestimonial();
+                $barberTestimonials->barber_id = $barber->id;
+                $barberTestimonials->name = $names[rand(0, count($names)-1)].' '.$lastNames[rand(0, count($lastNames)-1)];
+                $barberTestimonials->rate = rand(2, 4).'.'.rand(0, 9);
+                $barberTestimonials->body = $depoiments[rand(0, count($depoiments)-1)];
+                $barberTestimonials->save();
+            }
+
+            for ($e=0;$e<4;$e++) {
+                $rAdd = rand(7, 10);
+                $hours = [];
+                for ($r=0;$r<8;$r++) {
+                    $time = $r + $rAdd;
+                    if ($time < 10) {
+                        $time = '0'.$time;
+                    }
+                    $hours = $time.":00";
+                }
+                $babaerAvailability = new BarberAvailability();
+                $babaerAvailability->barber_id = $barber->id; 
+                $babaerAvailability->weekday = $e;
+                $babaerAvailability->hours =  $hours; 
+                $babaerAvailability->save();
             }
         }
     }
