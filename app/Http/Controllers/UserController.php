@@ -23,7 +23,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $array = ['error' => ''];
+        $data = $this->loggedUser;
+        $data['avatar'] = url('media/avatars/'.$data['avatar']);
+        $arra['data'] = $data;
+        return $array;
     }
 
     /**

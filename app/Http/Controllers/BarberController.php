@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Barber;
 
 class BarberController extends Controller
 {   
@@ -24,9 +25,12 @@ class BarberController extends Controller
     public function index()
     {
         $array = ['error' => ''];
-        $data = $this->loggedUser;
-        $data['avatar'] = url('media/avatars/'.$data['avatar']);
-        $arra['data'] = $data;
+        $collection = Barber::all();
+        foreach ($collection as $barber => $value) {
+            $barber[$value]['avatar'] = url('media/avatars/'.$barber[$value]['avatar']);
+        }
+        $array['data'] = $collection;
+        $array['location'] = 'Caxias do Sul';
         return $array;
     }
 
