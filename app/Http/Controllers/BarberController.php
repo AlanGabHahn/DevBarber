@@ -61,7 +61,7 @@ class BarberController extends Controller
             $lng = '';
             $city = 'Caxias do Sul';
         }
-        $collection = Barber::select(Barber::raw('*, '));
+        // $collection = Barber::select(Barber::raw('*, ')); - precisa ser terminada
         foreach ($collection as $barber => $value) {
             $barber[$value]['avatar'] = url('media/avatars/'.$barber[$value]['avatar']);
         }
