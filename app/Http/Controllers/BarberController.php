@@ -20,12 +20,48 @@ class BarberController extends Controller
     }
 
     /**
+     * Conexão com a api de geolocalização do Google
+     * @param $address
+     */
+    private function searchGeo($address) 
+    {
+        $key = env('MAPS_KEY', null);
+        $address = urlencode($address);
+        $url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$key;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        return json_decode($response, true);
+    }
+
+    /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $array = ['error' => ''];
-        $collection = Barber::all();
+        $lat = $request->input('latitude');
+        $lng = $request->input('longitude');
+        $city = $request->input('city');
+        if (!empty($city)) {
+            $response = $this->searchGeo($city);
+            if (count($response['results']) > 0) {
+                $lat = $response['results'][0]['geometry']['location']['lat'];
+                $lng = $response['results'][0]['geometry']['location']['lng'];
+            }
+        } elseif (!empty($lat) && !empty($lng)) {
+            $response = $this->searchGeo($lat. ',' .$lng);
+            if (count($response['results']) > 0) {
+                $city = $response['results'][0]['formatted_address'];
+            }
+        } else {
+            $lat = '';
+            $lng = '';
+            $city = 'Caxias do Sul';
+        }
+        $collection = Barber::select(Barber::raw('*, '));
         foreach ($collection as $barber => $value) {
             $barber[$value]['avatar'] = url('media/avatars/'.$barber[$value]['avatar']);
         }
