@@ -61,7 +61,13 @@ class BarberController extends Controller
             $lng = '';
             $city = 'Caxias do Sul';
         }
-        // $collection = Barber::select(Barber::raw('*, ')); - precisa ser terminada
+        $collection = Barber::select(Barber::raw('*, SQRT(
+            POW(69.1 * (latitude - '.$lat.'), 2) +
+            POW(69.1 * ('.$lng.' - longitude) * COS(latitude / 57.3), 2)
+        ) AS distance'))
+        ->havingRaw('distance < ?', [25])
+        ->orderBy('distance', 'ASC')
+        ->get();
         foreach ($collection as $barber => $value) {
             $barber[$value]['avatar'] = url('media/avatars/'.$barber[$value]['avatar']);
         }
