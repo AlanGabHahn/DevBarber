@@ -45,6 +45,10 @@ class BarberController extends Controller
         $lat = $request->input('latitude');
         $lng = $request->input('longitude');
         $city = $request->input('city');
+        $offset = $request->input('offset');
+        if (!$offset) {
+            $offset = 0;
+        }
         if (!empty($city)) {
             $response = $this->searchGeo($city);
             if (count($response['results']) > 0) {
@@ -67,6 +71,8 @@ class BarberController extends Controller
         ) AS distance'))
         ->havingRaw('distance < ?', [25])
         ->orderBy('distance', 'ASC')
+        ->offset($offset)
+        ->limit(10)
         ->get();
         foreach ($collection as $barber => $value) {
             $barber[$value]['avatar'] = url('media/avatars/'.$barber[$value]['avatar']);
