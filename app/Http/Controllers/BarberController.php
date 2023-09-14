@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Barber;
+use App\Models\BarberPhoto;
 
 class BarberController extends Controller
 {   
@@ -95,7 +96,28 @@ class BarberController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $array = [
+            'error' => ''
+        ];
+        $barber = Barber::find($id);
+        if ($barber) {
+            $barber['avatar'] = url('media/avatars/'.$barber['avatar']);
+            $barber['favorited'] = false;
+            $barber['photos'] = [];
+            $barber['services'] = [];
+            $barber['testimonials'] = [];
+            $barber['available'] = [];
+            $array['data'] = $barber;
+            $barber['photos'] = BarberPhoto::select(['id', 'image'])
+                ->where('barber_id', $barber->id)
+                ->get();
+            foreach($barber['photos'] as $bpKey => $bpValue) {
+                $barber['photos'][$bpValue]['image'] = url('media/uploads/'.$barber['photos'][$bpValue]['image']);
+            }
+        } else {
+            $array['error'] = 'Barbeiro não encontrado';
+        }
+        return $array; 
     }
 
     /**
