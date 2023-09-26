@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Barber;
 use App\Models\BarberPhoto;
+use App\Models\BarberService;
+use App\Models\BarberTestimonial;
 
 class BarberController extends Controller
 {   
@@ -108,12 +110,22 @@ class BarberController extends Controller
             $barber['testimonials'] = [];
             $barber['available'] = [];
             $array['data'] = $barber;
+            /** Buscando as fotos vinculadas ao barbeiro */
             $barber['photos'] = BarberPhoto::select(['id', 'image'])
                 ->where('barber_id', $barber->id)
                 ->get();
             foreach($barber['photos'] as $bpKey => $bpValue) {
                 $barber['photos'][$bpValue]['image'] = url('media/uploads/'.$barber['photos'][$bpValue]['image']);
             }
+            /** Buscando os serviço do barbeiro */
+            $barber['services'] = BarberService::select(['id', 'name', 'price'])
+                ->where('barber_id', $barber->id)
+                ->get();
+            /** Buscando os depoimentos*/
+            $barber['testimonials'] = BarberTestimonial::select(['id', 'name', 'rate', 'body'])
+                ->where('barber_id', $barber->id)
+                ->get();
+            $array['data'] = $barber;
         } else {
             $array['error'] = 'Barbeiro não encontrado';
         }
